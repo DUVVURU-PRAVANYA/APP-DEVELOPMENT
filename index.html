@@ -1,0 +1,2560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Botanica Flora - Premium Floral E-Commerce</title>
+    <link rel="manifest" href="manifest.json">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --sage: #9fb4a0;
+            --moss: #5a7558;
+            --cream: #fdfbf7;
+            --rose: #e8b4b8;
+            --charcoal: #3a3a3a;
+            --petal: #f9f3f0;
+            --gold: #d4af37;
+            --lavender: #d4c5e2;
+            --peach: #ffd5c8;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            background: var(--cream);
+            color: var(--charcoal);
+            overflow-x: hidden;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Enhanced Animated Background */
+        .floral-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.04;
+            background-image: 
+                radial-gradient(circle at 20% 30%, var(--rose) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, var(--lavender) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, var(--sage) 0%, transparent 50%);
+            animation: bgShift 20s ease-in-out infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        /* Floating Petals with Physics */
+        .petals-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .petal {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(ellipse at center, rgba(232, 180, 184, 0.8) 0%, rgba(212, 197, 226, 0.5) 100%);
+            border-radius: 50% 0 50% 0;
+            animation: fall linear infinite;
+            opacity: 0;
+            filter: blur(0.5px);
+        }
+
+        @keyframes fall {
+            0% {
+                opacity: 0;
+                transform: translateY(-100px) rotate(0deg) translateX(0);
+            }
+            10% {
+                opacity: 0.9;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(720deg) translateX(100px);
+            }
+        }
+
+        /* Sparkle Effect */
+        .sparkle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: sparkleAnim 1s ease-out forwards;
+        }
+
+        @keyframes sparkleAnim {
+            0% {
+                opacity: 1;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+        }
+
+        /* Header with Glass Effect */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(253, 251, 247, 0.85);
+            backdrop-filter: blur(30px) saturate(180%);
+            border-bottom: 1px solid rgba(159, 180, 160, 0.15);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 30px rgba(90, 117, 88, 0.05);
+        }
+
+        header.scrolled {
+            box-shadow: 0 10px 50px rgba(90, 117, 88, 0.15);
+            background: rgba(253, 251, 247, 0.95);
+        }
+
+        nav {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: var(--moss);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-family: 'Didot', 'Bodoni MT', serif;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            color: var(--rose);
+        }
+
+        .logo::before {
+            content: '🌸';
+            font-size: 1.6rem;
+            animation: bloom 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(232, 180, 184, 0.6));
+        }
+
+        @keyframes bloom {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(15deg); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--charcoal);
+            font-weight: 400;
+            font-size: 1.05rem;
+            letter-spacing: 1.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            font-family: 'Didot', serif;
+            cursor: pointer;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--rose), var(--lavender));
+            transition: all 0.4s ease;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 10px rgba(232, 180, 184, 0.5);
+        }
+
+        .nav-links a:hover::before,
+        .nav-links a.active::before {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--moss);
+            text-shadow: 0 0 20px rgba(159, 180, 160, 0.3);
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 1.8rem;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            color: var(--charcoal);
+            position: relative;
+            transition: all 0.3s ease;
+            padding: 0.6rem;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.3) rotate(15deg);
+            color: var(--rose);
+            filter: drop-shadow(0 0 8px rgba(232, 180, 184, 0.6));
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: linear-gradient(135deg, var(--rose), var(--lavender));
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            font-family: Arial, sans-serif;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 2px 10px rgba(232, 180, 184, 0.5);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        /* Hero Section with Parallax */
+        .hero {
+            margin-top: 95px;
+            height: 90vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #fdfbf7 0%, #f9f3f0 100%);
+        }
+
+        .hero-floral-accent {
+            position: absolute;
+            top: -10%;
+            right: -5%;
+            width: 600px;
+            height: 600px;
+            opacity: 0.2;
+            animation: float 8s ease-in-out infinite;
+            background: radial-gradient(circle, var(--rose) 0%, transparent 70%);
+            filter: blur(60px);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            50% { transform: translateY(-50px) rotate(10deg) scale(1.1); }
+        }
+
+        .hero-image-main {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1487070183336-b863922373d4?auto=format&fit=crop&w=1200&q=80') center/cover;
+            clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%);
+            z-index: 2;
+            transition: transform 0.3s ease;
+        }
+
+        .hero-image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(253, 251, 247, 0.3), transparent);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            width: 100%;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-text {
+            max-width: 700px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--sage);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            font-family: Arial, sans-serif;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hero-subtitle::before {
+            content: '✿';
+            color: var(--rose);
+            font-size: 1.5rem;
+            animation: spin 4s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-text h1 {
+            font-size: 6rem;
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 2.5rem;
+            color: var(--moss);
+            font-family: 'Didot', serif;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .hero-text h1 em {
+            font-style: italic;
+            background: linear-gradient(135deg, var(--rose), var(--lavender), var(--peach));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 5s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-description {
+            font-size: 1.4rem;
+            color: var(--charcoal);
+            margin-bottom: 3.5rem;
+            line-height: 1.9;
+            opacity: 0.85;
+            animation: fadeInUp 1.4s ease-out;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            animation: fadeInUp 1.6s ease-out;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 1.4rem 3.5rem;
+            border: none;
+            font-size: 1.05rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-block;
+            letter-spacing: 2px;
+            font-family: 'Didot', serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--moss), var(--sage));
+            color: white;
+            box-shadow: 0 8px 25px rgba(90, 117, 88, 0.3);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: linear-gradient(135deg, var(--rose), var(--lavender));
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.7s ease, height 0.7s ease;
+        }
+
+        .btn-primary:hover::before {
+            width: 350px;
+            height: 350px;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 12px 40px rgba(232, 180, 184, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .btn-primary span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--charcoal);
+            border: 2px solid var(--sage);
+        }
+
+        .btn-secondary:hover {
+            background: var(--sage);
+            color: white;
+            border-color: var(--sage);
+            box-shadow: 0 8px 25px rgba(159, 180, 160, 0.4);
+            transform: translateY(-3px);
+        }
+
+        /* Product Cards with Advanced Effects */
+        .featured {
+            padding: 10rem 3rem;
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 6rem;
+            position: relative;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: var(--sage);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            font-family: Arial, sans-serif;
+            font-weight: 300;
+        }
+
+        .section-title {
+            font-size: 4rem;
+            font-weight: 300;
+            color: var(--moss);
+            font-family: 'Didot', serif;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '✿ ✿ ✿';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--rose);
+            font-size: 1.2rem;
+            letter-spacing: 1rem;
+            animation: fadeInOut 3s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        .section-description {
+            font-size: 1.25rem;
+            color: var(--charcoal);
+            opacity: 0.75;
+            max-width: 700px;
+            margin: 2rem auto 0;
+            line-height: 1.8;
+        }
+
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-bottom: 5rem;
+        }
+
+        .collection-card {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            border-radius: 2px;
+            background: white;
+            box-shadow: 0 5px 30px rgba(90, 117, 88, 0.08);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .collection-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            z-index: 10;
+            transition: left 0.7s ease;
+        }
+
+        .collection-card:hover::before {
+            left: 100%;
+        }
+
+        .collection-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 70px rgba(90, 117, 88, 0.2);
+        }
+
+        .collection-image {
+            position: relative;
+            height: 480px;
+            overflow: hidden;
+        }
+
+        .collection-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: brightness(1.05) saturate(1.1);
+        }
+
+        .collection-card:hover .collection-image img {
+            transform: scale(1.15) rotate(2deg);
+            filter: brightness(1.15) saturate(1.3);
+        }
+
+        .collection-badge {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, var(--rose), var(--lavender));
+            padding: 0.6rem 1.8rem;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(232, 180, 184, 0.5);
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(232, 180, 184, 0.7); }
+        }
+
+        .collection-info {
+            padding: 2.5rem;
+            background: white;
+            position: relative;
+        }
+
+        .collection-name {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            color: var(--moss);
+            font-family: 'Didot', serif;
+            transition: all 0.3s ease;
+        }
+
+        .collection-card:hover .collection-name {
+            color: var(--rose);
+        }
+
+        .collection-desc {
+            font-size: 1.05rem;
+            color: var(--charcoal);
+            opacity: 0.75;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .collection-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .collection-price {
+            font-size: 1.8rem;
+            font-weight: 300;
+            background: linear-gradient(135deg, var(--rose), var(--lavender));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Didot', serif;
+        }
+
+        .add-to-cart-btn {
+            background: linear-gradient(135deg, var(--moss), var(--sage));
+            border: none;
+            color: white;
+            padding: 1rem 2.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-family: Arial, sans-serif;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 15px rgba(90, 117, 88, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-to-cart-btn::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart-btn.added {
+            background: linear-gradient(135deg, var(--lavender), var(--rose));
+        }
+
+        .add-to-cart-btn.added::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .add-to-cart-btn:hover {
+            background: linear-gradient(135deg, var(--rose), var(--lavender));
+            box-shadow: 0 8px 30px rgba(232, 180, 184, 0.5);
+            transform: translateY(-3px);
+        }
+
+        /* Parallax Section with Enhanced Effects */
+        .parallax-section {
+            height: 75vh;
+            background: url('https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=1600&q=80') center/cover fixed;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .parallax-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(90, 117, 88, 0.88), rgba(159, 180, 160, 0.78));
+            animation: overlayShift 10s ease-in-out infinite;
+        }
+
+        @keyframes overlayShift {
+            0%, 100% { opacity: 0.88; }
+            50% { opacity: 0.78; }
+        }
+
+        .parallax-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            max-width: 900px;
+            padding: 0 2rem;
+        }
+
+        .parallax-content h2 {
+            font-size: 4rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            font-family: 'Didot', serif;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .parallax-content p {
+            font-size: 1.4rem;
+            line-height: 2;
+            margin-bottom: 3rem;
+            opacity: 0.98;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        /* Products with Advanced Grid */
+        .products {
+            padding: 10rem 3rem;
+            background: linear-gradient(180deg, white 0%, var(--petal) 100%);
+            position: relative;
+            z-index: 2;
+        }
+
+        .products-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 5rem;
+            border-bottom: 2px solid rgba(159, 180, 160, 0.2);
+        }
+
+        .filter-btn {
+            padding: 1.2rem 3rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 400;
+            font-size: 1.05rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: Arial, sans-serif;
+            transition: all 0.3s ease;
+            color: var(--charcoal);
+            opacity: 0.5;
+            position: relative;
+        }
+
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--rose), var(--lavender));
+            transition: width 0.4s ease;
+        }
+
+        .filter-btn.active::before {
+            width: 100%;
+        }
+
+        .filter-btn.active {
+            opacity: 1;
+            color: var(--moss);
+        }
+
+        .filter-btn:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+        }
+
+        .product-card {
+            background: white;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            position: relative;
+            border-radius: 2px;
+            box-shadow: 0 4px 20px rgba(90, 117, 88, 0.06);
+        }
+
+        .product-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(232, 180, 184, 0.1));
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .product-card:hover::after {
+            opacity: 1;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 50px rgba(90, 117, 88, 0.15);
+        }
+
+        .product-image {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+            background: var(--petal);
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: brightness(1.05) saturate(1.1);
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.12) rotate(3deg);
+            filter: brightness(1.15) saturate(1.3);
+        }
+
+        .quick-add {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(120px);
+            background: linear-gradient(135deg, var(--moss), var(--sage));
+            color: white;
+            border: none;
+            padding: 1.2rem 3rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-family: Arial, sans-serif;
+            transition: all 0.5s ease;
+            opacity: 0;
+            box-shadow: 0 6px 20px rgba(90, 117, 88, 0.4);
+        }
+
+        .product-card:hover .quick-add {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .quick-add:hover {
+            background: linear-gradient(135deg, var(--rose), var(--lavender));
+            box-shadow: 0 8px 30px rgba(232, 180, 184, 0.6);
+            transform: translateX(-50%) translateY(-3px);
+        }
+
+        .product-info {
+            padding: 2rem 1.8rem;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover .product-info {
+            background: linear-gradient(135deg, rgba(232, 180, 184, 0.05), rgba(212, 197, 226, 0.05));
+        }
+
+        .product-category {
+            font-size: 0.85rem;
+            color: var(--sage);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            font-family: Arial, sans-serif;
+        }
+
+        .product-name {
+            font-size: 1.6rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            color: var(--moss);
+            font-family: 'Didot', serif;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover .product-name {
+            color: var(--rose);
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 300;
+            background: linear-gradient(135deg, var(--rose), var(--lavender));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Didot', serif;
+        }
+
+        .product-rating {
+            margin-top: 1rem;
+            color: var(--gold);
+            font-size: 1rem;
+            letter-spacing: 2px;
+        }
+
+        /* Wishlist Heart Animation */
+        .wishlist-btn-product {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 5;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .wishlist-btn-product:hover {
+            transform: scale(1.15);
+            background: white;
+        }
+
+        .wishlist-btn-product.active {
+            color: var(--rose);
+            animation: heartbeat 0.6s ease;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.3); }
+            50% { transform: scale(1.1); }
+            75% { transform: scale(1.25); }
+        }
+
+        /* Enhanced Cart Sidebar */
+        .cart-sidebar, .wishlist-modal {
+            position: fixed;
+            top: 0;
+            right: -600px;
+            width: 600px;
+            height: 100vh;
+            background: white;
+            box-shadow: -15px 0 50px rgba(90, 117, 88, 0.25);
+            z-index: 2000;
+            transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-sidebar.open, .wishlist-modal.open {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 3rem;
+            border-bottom: 2px solid rgba(159, 180, 160, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--petal), white);
+        }
+
+        .cart-header h2 {
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--moss);
+            font-family: 'Didot', serif;
+        }
+
+        .close-cart, .close-wishlist {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--charcoal);
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-cart:hover, .close-wishlist:hover {
+            transform: rotate(90deg);
+            background: var(--rose);
+            color: white;
+        }
+
+        .cart-items, .wishlist-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2.5rem;
+        }
+
+        .cart-item, .wishlist-item {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 2.5rem;
+            border-bottom: 1px solid rgba(159, 180, 160, 0.15);
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .cart-item-img, .wishlist-item-img {
+            width: 130px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(90, 117, 88, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .cart-item:hover .cart-item-img,
+        .wishlist-item:hover .wishlist-item-img {
+            transform: scale(1.05);
+        }
+
+        .cart-item-info, .wishlist-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name, .wishlist-item-name {
+            font-weight: 300;
+            font-size: 1.4rem;
+            color: var(--moss);
+            margin-bottom: 0.8rem;
+            font-family: 'Didot', serif;
+        }
+
+        .cart-item-category, .wishlist-item-category {
+            font-size: 0.85rem;
+            color: var(--sage);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--sage);
+            background: white;
+            cursor: pointer;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            color: var(--sage);
+        }
+
+        .quantity-btn:hover {
+            background: var(--sage);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .quantity-display {
+            font-size: 1.2rem;
+            color: var(--charcoal);
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .cart-item-price, .wishlist-item-price {
+            background: linear-gradient(135deg, var(--rose), var(--lavender));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 300;
+            font-size: 1.3rem;
+            font-family: 'Didot', serif;
+        }
+
+        .cart-item-remove, .wishlist-item-remove {
+            background: none;
+            border: none;
+            color: var(--sage);
+            cursor: pointer;
+            padding: 0.5rem;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-item-remove:hover, .wishlist-item-remove:hover {
+            background: var(--rose);
+            color: white;
+            transform: scale(1.2) rotate(90deg);
+        }
+
+        .cart-footer {
+            padding: 3rem;
+            border-top: 2px solid rgba(159, 180, 160, 0.2);
+            background: linear-gradient(135deg, white, var(--petal));
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 2.5rem;
+            color: var(--moss);
+            font-family: 'Didot', serif;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 1.6rem;
+            background: linear-gradient(135deg, var(--moss), var(--sage));
+            color: white;
+            border: none;
+            font-size: 1.05rem;
+            font-weight: 400;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: Arial, sans-serif;
+            transition: all 0.4s ease;
+            border-radius: 4px;
+            box-shadow: 0 6px 20px rgba(90, 117, 88, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .checkout-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: linear-gradient(135deg, var(--rose), var(--lavender));
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .checkout-btn:hover::before {
+            width: 600px;
+            height: 600px;
+        }
+
+        .checkout-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .checkout-btn:hover {
+            box-shadow: 0 10px 40px rgba(232, 180, 184, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .empty-cart, .empty-wishlist {
+            text-align: center;
+            padding: 6rem 2rem;
+            color: var(--sage);
+        }
+
+        .empty-cart-icon, .empty-wishlist-icon {
+            font-size: 6rem;
+            margin-bottom: 2rem;
+            opacity: 0.25;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .empty-cart h3, .empty-wishlist h3 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            font-family: 'Didot', serif;
+            color: var(--moss);
+        }
+
+        /* Search Modal with Glow */
+        .search-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(90, 117, 88, 0.96);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(20px);
+        }
+
+        .search-modal.active {
+            display: flex;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .search-content {
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 2.5rem;
+            font-size: 2.5rem;
+            background: white;
+            border: none;
+            font-family: 'Didot', serif;
+            color: var(--moss);
+            border-radius: 8px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(232, 180, 184, 0.5), 0 10px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-input::placeholder {
+            color: var(--sage);
+            opacity: 0.5;
+        }
+
+        .close-search {
+            position: absolute;
+            top: -60px;
+            right: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-search:hover {
+            transform: rotate(90deg) scale(1.1);
+            background: white;
+            color: var(--moss);
+        }/* Add this to your existing CSS */
+.search-modal .search-input {
+    width: 100%;
+    padding: 2.5rem;
+    font-size: 2.5rem;
+    background: white;
+    border: none;
+    font-family: 'Didot', serif;
+    color: var(--moss);
+    border-radius: 8px;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.search-modal .search-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(232, 180, 184, 0.5), 0 10px 50px rgba(0, 0, 0, 0.3);
+    transform: scale(1.02);
+}
+
+.search-modal .search-input::placeholder {
+    color: var(--sage);
+    opacity: 0.5;
+    font-style: italic;
+}
+
+        /* Notification Toast */
+        .notification-toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--moss), var(--sage));
+            color: white;
+            padding: 1.5rem 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(90, 117, 88, 0.4);
+            z-index: 4000;
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification-toast.show {
+            display: flex;
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+        }
+
+        .notification-text {
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Contact Page */
+        .contact-section {
+            padding: 12rem 3rem 10rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: start;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 4rem;
+            box-shadow: 0 15px 60px rgba(90, 117, 88, 0.12);
+            border-radius: 8px;
+            transition: all 0.4s ease;
+        }
+
+        .contact-form:hover {
+            box-shadow: 0 20px 80px rgba(90, 117, 88, 0.18);
+        }
+
+        .form-group {
+            margin-bottom: 2.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 1rem;
+            color: var(--moss);
+            font-size: 0.95rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1.2rem;
+            border: 2px solid rgba(159, 180, 160, 0.3);
+            background: var(--cream);
+            font-family: 'Georgia', serif;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--rose);
+            box-shadow: 0 0 0 4px rgba(232, 180, 184, 0.15);
+            background: white;
+        }
+
+        .form-group textarea {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.4rem;
+            background: linear-gradient(135deg, var(--moss), var(--sage));
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.05rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: Arial, sans-serif;
+            transition: all 0.4s ease;
+            border-radius: 4px;
+            box-shadow: 0 6px 20px rgba(90, 117, 88, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: linear-gradient(135deg, var(--rose), var(--lavender));
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .submit-btn:hover::before {
+            width: 500px;
+            height: 500px;
+        }
+
+        .submit-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .submit-btn:hover {
+            box-shadow: 0 10px 40px rgba(232, 180, 184, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .contact-info {
+            padding: 2rem 0;
+        }
+
+        .contact-item {
+            margin-bottom: 4rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(90, 117, 88, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(90, 117, 88, 0.15);
+        }
+
+        .contact-item h3 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--moss);
+            margin-bottom: 1.5rem;
+            font-family: 'Didot', serif;
+        }
+
+        .contact-item p {
+            font-size: 1.15rem;
+            color: var(--charcoal);
+            line-height: 2;
+            opacity: 0.8;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 10rem 3rem;
+            background: var(--petal);
+            position: relative;
+            z-index: 2;
+        }
+
+        .testimonial-slider {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 5rem 4rem;
+            text-align: center;
+            box-shadow: 0 15px 60px rgba(90, 117, 88, 0.12);
+            border-radius: 8px;
+            transition: all 0.4s ease;
+        }
+
+        .testimonial-card:hover {
+            box-shadow: 0 20px 80px rgba(90, 117, 88, 0.18);
+            transform: translateY(-5px);
+        }
+
+        .quote-icon {
+            font-size: 5rem;
+            background: linear-gradient(135deg, var(--rose), var(--lavender));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0.4;
+            margin-bottom: 2.5rem;
+            font-family: Georgia, serif;
+        }
+
+        .testimonial-text {
+            font-size: 1.6rem;
+            line-height: 2;
+            color: var(--charcoal);
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .author-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--rose);
+            box-shadow: 0 6px 20px rgba(232, 180, 184, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover .author-img {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(232, 180, 184, 0.6);
+        }
+
+        .author-info h4 {
+            font-weight: 300;
+            font-size: 1.3rem;
+            color: var(--moss);
+            margin-bottom: 0.5rem;
+            font-family: 'Didot', serif;
+        }
+
+        .author-info p {
+            font-size: 1rem;
+            color: var(--sage);
+            letter-spacing: 1.5px;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--moss), var(--sage));
+            color: white;
+            padding: 6rem 3rem 2.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 5rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            letter-spacing: 4px;
+            font-family: 'Didot', serif;
+        }
+
+        .footer-desc {
+            opacity: 0.9;
+            line-height: 2;
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-size: 1.2rem;
+            border-radius: 50%;
+            background: transparent;
+        }
+
+        .social-btn:hover {
+            background: linear-gradient(135deg, var(--rose), var(--lavender));
+            border-color: transparent;
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(232, 180, 184, 0.5);
+        }
+
+        .footer-section h3 {
+            margin-bottom: 2rem;
+            font-size: 1.15rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: Arial, sans-serif;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 1.2rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.85;
+            transition: all 0.3s ease;
+            font-size: 1.05rem;
+            cursor: pointer;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            padding-left: 10px;
+            color: var(--peach);
+        }
+
+        .footer-bottom {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            opacity: 0.8;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 1200px) {
+            .collection-grid, .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-text h1 {
+                font-size: 3.5rem;
+            }
+            .collection-grid, .product-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            .cart-sidebar, .wishlist-modal {
+                width: 100%;
+                right: -100%;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floral-background"></div>
+    <div class="petals-container" id="petalsContainer"></div>
+
+    <header id="header">
+        <nav>
+            <div class="logo" onclick="navigateTo('home')">BOTANICA</div>
+            <ul class="nav-links">
+                <li><a onclick="navigateTo('home')" class="nav-link active">Home</a></li>
+                <li><a onclick="navigateTo('collections')" class="nav-link">Collections</a></li>
+                <li><a onclick="navigateTo('shop')" class="nav-link">Shop</a></li>
+                <li><a onclick="navigateTo('stories')" class="nav-link">Stories</a></li>
+                <li><a onclick="navigateTo('contact')" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-icons">
+                <button class="icon-btn" id="searchBtn">🔍</button>
+                <button class="icon-btn" id="wishlistBtn">
+                    ♡
+                    <span class="cart-count" id="wishlistCount" style="display: none;">0</span>
+                </button>
+                <button class="icon-btn" id="cartBtn">
+                    🛍
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Notification Toast -->
+    <div class="notification-toast" id="notificationToast">
+        <span class="notification-icon">✓</span>
+        <span class="notification-text">Added to cart!</span>
+    </div>
+
+    <!-- HOME PAGE -->
+    <div id="homePage" class="page active">
+        <section class="hero">
+            <div class="hero-floral-accent"></div>
+            <div class="hero-image-main">
+                <div class="hero-image-overlay"></div>
+            </div>
+            <div class="hero-content">
+                <div class="hero-text">
+                    <div class="hero-subtitle">Fresh Daily • Artisan Crafted</div>
+                    <h1>Where Nature Meets <em>Artistry</em></h1>
+                    <p class="hero-description">Each arrangement is a living masterpiece, thoughtfully composed with seasonal blooms and timeless elegance.</p>
+                    <div class="cta-buttons">
+                        <button class="btn-primary" onclick="navigateTo('shop')">
+                            <span>Explore Collections</span>
+                        </button>
+                        <button class="btn-secondary" onclick="navigateTo('contact')">Bespoke Orders</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="parallax-section">
+            <div class="parallax-overlay"></div>
+            <div class="parallax-content">
+                <h2>Sustainable Beauty, Thoughtfully Sourced</h2>
+                <p>We partner with local growers and sustainable farms to bring you the freshest seasonal blooms while caring for our planet. Every stem tells a story of ethical beauty.</p>
+                <button class="btn-primary"><span>Our Story</span></button>
+            </div>
+        </section>
+    </div>
+
+    <!-- COLLECTIONS PAGE -->
+    <div id="collectionsPage" class="page">
+        <section class="featured">
+            <div class="section-header">
+                <div class="section-subtitle">Signature Collections</div>
+                <h2 class="section-title">Curated for Every Moment</h2>
+                <p class="section-description">From intimate gatherings to grand celebrations, discover arrangements that speak the language of flowers.</p>
+            </div>
+            <div class="collection-grid" id="collectionsGrid"></div>
+        </section>
+    </div>
+
+    <!-- SHOP PAGE -->
+    <div id="shopPage" class="page">
+        <section class="products">
+            <div class="products-container">
+                <div class="section-header">
+                    <div class="section-subtitle">The Atelier</div>
+                    <h2 class="section-title">Botanical Masterpieces</h2>
+                    <p class="section-description">Handcrafted arrangements designed to evoke emotion and celebrate life's precious moments.</p>
+                </div>
+                <div class="filter-tabs">
+                    <button class="filter-btn active" onclick="filterProducts('all')">All Blooms</button>
+                    <button class="filter-btn" onclick="filterProducts('signature')">Signature</button>
+                    <button class="filter-btn" onclick="filterProducts('seasonal')">Seasonal</button>
+                    <button class="filter-btn" onclick="filterProducts('new')">New Arrivals</button>
+                </div>
+                <div class="product-grid" id="productGrid"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- STORIES PAGE -->
+    <div id="storiesPage" class="page">
+        <section class="testimonials">
+            <div class="section-header">
+                <div class="section-subtitle">Client Stories</div>
+                <h2 class="section-title">Words from Our Garden</h2>
+            </div>
+            <div class="testimonial-slider">
+                <div class="testimonial-card">
+                    <div class="quote-icon">"</div>
+                    <p class="testimonial-text">The arrangements transformed our wedding into a fairytale. Each bouquet was a work of art, perfectly capturing our vision with exquisite attention to detail and unmatched elegance.</p>
+                    <div class="testimonial-author">
+                        <img src="https://i.pravatar.cc/150?img=5" alt="Isabella" class="author-img">
+                        <div class="author-info">
+                            <h4>Isabella Marchand</h4>
+                            <p>Wedding Client, June 2025</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials" style="background: white;">
+            <div class="testimonial-slider">
+                <div class="testimonial-card" style="background: var(--petal);">
+                    <div class="quote-icon">"</div>
+                    <p class="testimonial-text">Botanica Flora exceeded every expectation. The seasonal arrangements bring such joy to our office space. Their attention to sustainability makes us feel good about our choice too.</p>
+                    <div class="testimonial-author">
+                        <img src="https://i.pravatar.cc/150?img=8" alt="James" class="author-img">
+                        <div class="author-info">
+                            <h4>James Patterson</h4>
+                            <p>Corporate Client</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- CONTACT PAGE -->
+    <div id="contactPage" class="page">
+        <section class="contact-section">
+            <div class="section-header">
+                <div class="section-subtitle">Get in Touch</div>
+                <h2 class="section-title">Let's Create Together</h2>
+                <p class="section-description">Whether you're planning a wedding, event, or simply want to brighten someone's day, we're here to help.</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-form">
+                    <h3 style="font-family: 'Didot', serif; font-size: 2.2rem; margin-bottom: 2.5rem; color: var(--moss);">Send us a Message</h3>
+                    <form onsubmit="handleContactSubmit(event)">
+                        <div class="form-group">
+                            <label>Your Name</label>
+                            <input type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel">
+                        </div>
+                        <div class="form-group">
+                            <label>Message</label>
+                            <textarea required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn"><span>Send Message</span></button>
+                    </form>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <h3>Visit Our Atelier</h3>
+                        <p>127 Bloom Avenue<br>Garden District, NY 10011</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Hours</h3>
+                        <p>Monday - Saturday: 9:00 AM - 7:00 PM<br>Sunday: 10:00 AM - 5:00 PM</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Contact</h3>
+                        <p>Phone: (212) 555-1234<br>Email: hello@botanica.flora</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Follow Us</h3>
+                        <div class="social-links">
+                            <div class="social-btn">f</div>
+                            <div class="social-btn">𝕏</div>
+                            <div class="social-btn">in</div>
+                            <div class="social-btn">📌</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div>
+                <div class="footer-logo">BOTANICA FLORA</div>
+                <p class="footer-desc">A boutique floral studio where artistry blooms. Serving discerning clients since 2015 with passion, creativity, and an unwavering commitment to botanical excellence.</p>
+                <div class="social-links">
+                    <div class="social-btn">f</div>
+                    <div class="social-btn">𝕏</div>
+                    <div class="social-btn">in</div>
+                    <div class="social-btn">📌</div>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Explore</h3>
+                <ul class="footer-links">
+                    <li><a onclick="navigateTo('collections')">Collections</a></li>
+                    <li><a onclick="navigateTo('shop')">Shop All</a></li>
+                    <li><a onclick="navigateTo('stories')">Stories</a></li>
+                    <li><a onclick="navigateTo('contact')">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Services</h3>
+                <ul class="footer-links">
+                    <li><a>Wedding Florals</a></li>
+                    <li><a>Corporate Events</a></li>
+                    <li><a>Bespoke Design</a></li>
+                    <li><a>Same-Day Delivery</a></li>
+                    <li><a>Care Guide</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Atelier</h3>
+                <ul class="footer-links">
+                    <li>127 Bloom Avenue</li>
+                    <li>Garden District, NY 10011</li>
+                    <li><a href="mailto:hello@botanica.flora">hello@botanica.flora</a></li>
+                    <li><a href="tel:+12125551234">(212) 555-1234</a></li>
+                    <li>Mon-Sat: 9AM - 7PM</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Botanica Flora. Each bloom handcrafted with love in New York City.</p>
+        </div>
+    </footer>
+
+    <!-- Search Modal -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-content">
+            <button class="close-search" onclick="closeSearch()">✕</button>
+            <input type="text" class="search-input" placeholder="Search flowers..." id="searchInput" onkeyup="handleSearch(event)">
+        </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>Your Selection</h2>
+            <button class="close-cart" id="closeCart">✕</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="empty-cart">
+                <div class="empty-cart-icon">🌸</div>
+                <h3>Your cart awaits</h3>
+                <p>Begin your botanical journey</p>
+            </div>
+        </div>
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="checkout-btn" onclick="handleCheckout()"><span>Complete Order</span></button>
+        </div>
+    </div>
+
+    <!-- Wishlist Modal -->
+    <div class="wishlist-modal" id="wishlistModal">
+        <div class="cart-header">
+            <h2>Your Wishlist</h2>
+            <button class="close-wishlist" id="closeWishlist">✕</button>
+        </div>
+        <div class="wishlist-items" id="wishlistItems">
+            <div class="empty-wishlist">
+                <div class="empty-wishlist-icon">🌺</div>
+                <h3>No favorites yet</h3>
+                <p>Save your favorite blooms here</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced Floating Petals with Variations
+        function createPetals() {
+            const container = document.getElementById('petalsContainer');
+            const petalCount = 25;
+            const colors = [
+                'radial-gradient(ellipse at center, rgba(232, 180, 184, 0.8) 0%, rgba(212, 197, 226, 0.5) 100%)',
+                'radial-gradient(ellipse at center, rgba(212, 197, 226, 0.8) 0%, rgba(255, 213, 200, 0.5) 100%)',
+                'radial-gradient(ellipse at center, rgba(159, 180, 160, 0.7) 0%, rgba(232, 180, 184, 0.4) 100%)'
+            ];
+            
+            for (let i = 0; i < petalCount; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                petal.style.left = Math.random() * 100 + '%';
+                petal.style.animationDuration = (Math.random() * 15 + 20) + 's';
+                petal.style.animationDelay = Math.random() * 10 + 's';
+                petal.style.width = (Math.random() * 15 + 12) + 'px';
+                petal.style.height = (Math.random() * 15 + 12) + 'px';
+                petal.style.background = colors[Math.floor(Math.random() * colors.length)];
+                container.appendChild(petal);
+            }
+        }
+
+        // Mouse Sparkle Effect
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.92) {
+                createSparkle(e.clientX, e.clientY);
+            }
+        });
+
+        function createSparkle(x, y) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+            sparkle.style.background = `rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, 0.8)`;
+            document.body.appendChild(sparkle);
+            
+            setTimeout(() => {
+                sparkle.remove();
+            }, 1000);
+        }
+
+        // Data
+        const collections = [
+  {
+    id: 1,
+    name: "The Garden Romance",
+    desc: "Blush peonies, garden roses, and delicate ranunculus in soft ivory tones.",
+    price: 12000,
+    img: "https://i.pinimg.com/1200x/18/3b/f7/183bf788441e329be2802c3c27622ed1.jpg",
+    badge: "Bestseller",
+    category: "signature",
+    occasion: "wedding"
+  },
+  {
+    id: 2,
+    name: "Spring Awakening",
+    desc: "Vibrant tulips and anemones celebrating the season's first bloom.",
+    price: 10500,
+    img: "https://i.pinimg.com/736x/0e/c7/ba/0ec7ba589cc1da7d0e0c08b345efcda9.jpg",
+    badge: "Seasonal",
+    category: "seasonal",
+    occasion: "birthday"
+  },
+  {
+    id: 3,
+    name: "Golden Hour",
+    desc: "Sunflowers and craspedia in warm, sun-kissed hues.",
+    price: 8200,
+    img: "https://i.pinimg.com/736x/a1/79/db/a179db43f61ff704b165ae42983ebb6e.jpg",
+    badge: "New",
+    category: "new",
+    occasion: "anniversary"
+  },
+  {
+    id: 4,
+    name: "Midnight Garden",
+    desc: "Deep burgundy roses and dahlias with dramatic foliage.",
+    price: 13800,
+    img: "https://i.pinimg.com/1200x/b0/d4/de/b0d4def47fe1d115e98841e96c20f9ea.jpg",
+    badge: "Bestseller",
+    category: "signature",
+    occasion: "romance"
+  },
+  {
+    id: 5,
+    name: "Wildflower Meadow",
+    desc: "A rustic mix of seasonal wildflowers and grasses.",
+    price: 7400,
+    img: "https://i.pinimg.com/736x/ad/37/9c/ad379cb2d277b9d6cf6d97540159a462.jpg",
+    badge: "",
+    category: "seasonal",
+    occasion: "casual"
+  },
+  {
+    id: 6,
+    name: "Ocean Breeze",
+    desc: "Blue hydrangeas and white lilies in a coastal palette.",
+    price: 11300,
+    img: "https://i.pinimg.com/736x/e9/1d/2a/e91d2a98c1dadcd2f530167b8af1f483.jpg",
+    badge: "New",
+    category: "new",
+    occasion: "sympathy"
+  }
+];
+
+
+        const products = [
+            {id: 1, name: "The Garden Romance", category: "Signature", desc: "Blush peonies & garden roses", price: 12000, img: "https://i.pinimg.com/1200x/18/3b/f7/183bf788441e329be2802c3c27622ed1.jpg", type: "signature"},
+            {id: 2, name: "Spring Awakening", category: "Seasonal", desc: "Vibrant tulips & anemones", price: 10500, img: "https://i.pinimg.com/736x/0e/c7/ba/0ec7ba589cc1da7d0e0c08b345efcda9.jpg", type: "seasonal"},
+            {id: 3, name: "Golden Hour", category: "New Arrival", desc: "Sunflowers in warm hues", price: 8200, img: "https://i.pinimg.com/736x/a1/79/db/a179db43f61ff704b165ae42983ebb6e.jpg", type: "new"},
+            {id: 4, name: "Midnight Garden", category: "Signature", desc: "Deep burgundy roses & dahlias", price: 13800, img: "https://i.pinimg.com/1200x/b0/d4/de/b0d4def47fe1d115e98841e96c20f9ea.jpg", type: "signature"},
+            {id: 5, name: "Wildflower Meadow", category: "Rustic", desc: "Natural wildflower mix", price: 7400 ,img: "https://i.pinimg.com/736x/ad/37/9c/ad379cb2d277b9d6cf6d97540159a462.jpg", type: "seasonal"},
+            {id: 6, name: "Ocean Breeze", category: "Seasonal", desc: "Blue hydrangeas & white lilies", price: 11300, img: "https://i.pinimg.com/736x/e9/1d/2a/e91d2a98c1dadcd2f530167b8af1f483.jpg", type: "new"},
+            {id: 7, name: "Lavender Fields", category: "Aromatic", desc: "French lavender bouquet", price: 1400, img: "https://i.pinimg.com/736x/4c/9d/7d/4c9d7deadd8779c6bcb75975a2f24967.jpg", type: "seasonal"},
+            {id: 8, name: "Coral Reef", category: "Tropical", desc: "Exotic coral proteas", price: 9500, img: "https://i.pinimg.com/1200x/72/08/a9/7208a910f2d28818939c9f7ef0d81e3c.jpg", type: "signature"} ];
+
+        let cart = [];
+        let wishlist = [];
+        let currentFilter = 'all';
+
+        // Navigation
+        function navigateTo(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            
+            document.getElementById(page + 'Page').classList.add('active');
+            const link = document.querySelector(`[onclick="navigateTo('${page}')"]`);
+            if (link && link.classList.contains('nav-link')) link.classList.add('active');
+            
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            
+            if (page === 'collections') renderCollections();
+            if (page === 'shop') renderProducts();
+        }
+
+        // Render Collections
+        function renderCollections() {
+            const grid = document.getElementById('collectionsGrid');
+            grid.innerHTML = collections.map(c => `
+                <div class="collection-card">
+                    <div class="collection-image">
+                        <img src="${c.img}" alt="${c.name}">
+                        ${c.badge ? `<span class="collection-badge">${c.badge}</span>` : ''}
+                    </div>
+                    <div class="collection-info">
+                        <h3 class="collection-name">${c.name}</h3>
+                        <p class="collection-desc">${c.desc}</p>
+                        <div class="collection-footer">
+                            <div class="collection-price">${c.price}</div>
+                            <button class="add-to-cart-btn" onclick="addToCart(${c.id}, true)">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render Products
+        function renderProducts(filter = 'all') {
+            const grid = document.getElementById('productGrid');
+            const filtered = filter === 'all' ? products : products.filter(p => p.type === filter);
+            
+            grid.innerHTML = filtered.map(p => `
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="${p.img}" alt="${p.name}">
+                        <button class="wishlist-btn-product" onclick="toggleWishlist(${p.id}, event)">♡</button>
+                        <button class="quick-add" onclick="addToCart(${p.id})">Add to Cart</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">${p.category}</div>
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-price">${p.price}</div>
+                        <div class="product-rating">★★★★★</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter Products
+        function filterProducts(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderProducts(type);
+        }
+
+        // Add to Cart with Animation
+        function addToCart(id, isCollection = false) {
+            const item = isCollection ? collections.find(c => c.id === id) : products.find(p => p.id === id);
+            const existing = cart.find(c => c.id === id && c.isCollection === isCollection);
+            
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({...item, quantity: 1, isCollection});
+            }
+            
+            updateCart();
+            showNotification('Added to cart!', '✓');
+            
+            // Add button animation
+            if (event && event.target) {
+                const btn = event.target;
+                btn.classList.add('added');
+                setTimeout(() => btn.classList.remove('added'), 1000);
+            }
+            
+            // Open cart sidebar
+            document.getElementById('cartSidebar').classList.add('open');
+        }
+
+        // Update Quantity
+        function updateQuantity(id, isCollection, delta) {
+            const item = cart.find(c => c.id === id && c.isCollection === isCollection);
+            if (item) {
+                item.quantity = Math.max(1, item.quantity + delta);
+                updateCart();
+            }
+        }
+
+        // Remove from Cart
+        function removeFromCart(id, isCollection) {
+            cart = cart.filter(item => !(item.id === id && item.isCollection === isCollection));
+            updateCart();
+        }
+
+        // Update Cart Display
+        function updateCart() {
+            const cartCount = document.getElementById('cartCount');
+            const cartItems = document.getElementById('cartItems');
+            const cartFooter = document.getElementById('cartFooter');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">🌸</div>
+                        <h3>Your cart awaits</h3>
+                        <p>Begin your botanical journey</p>
+                    </div>
+                `;
+                cartFooter.style.display = 'none';
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <img src="${item.img}" alt="${item.name}" class="cart-item-img">
+                        <div class="cart-item-info">
+                            <div class="cart-item-category">${item.category || item.badge || 'Collection'}</div>
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="quantity-control">
+                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.isCollection}, -1)">−</button>
+                                <span class="quantity-display">${item.quantity}</span>
+                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.isCollection}, 1)">+</button>
+                            </div>
+                            <div class="cart-item-price">${(item.price * item.quantity).toFixed(2)}</div>
+                        </div>
+                        <button class="cart-item-remove" onclick="removeFromCart(${item.id}, ${item.isCollection})">✕</button>
+                    </div>
+                `).join('');
+                
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                cartTotal.textContent = `${total.toFixed(2)}`;
+                cartFooter.style.display = 'block';
+            }
+        }
+
+        // Wishlist Functions
+        function toggleWishlist(id, e) {
+            e.stopPropagation();
+            const product = products.find(p => p.id === id);
+            const index = wishlist.findIndex(w => w.id === id);
+            
+            if (index > -1) {
+                wishlist.splice(index, 1);
+                e.target.classList.remove('active');
+                showNotification('Removed from wishlist', '♡');
+            } else {
+                wishlist.push(product);
+                e.target.classList.add('active');
+                showNotification('Added to wishlist!', '♥');
+            }
+            
+            updateWishlist();
+        }
+
+        function updateWishlist() {
+            const wishlistCount = document.getElementById('wishlistCount');
+            const wishlistItems = document.getElementById('wishlistItems');
+            
+            wishlistCount.textContent = wishlist.length;
+            wishlistCount.style.display = wishlist.length > 0 ? 'flex' : 'none';
+            
+            if (wishlist.length === 0) {
+                wishlistItems.innerHTML = `
+                    <div class="empty-wishlist">
+                        <div class="empty-wishlist-icon">🌺</div>
+                        <h3>No favorites yet</h3>
+                        <p>Save your favorite blooms here</p>
+                    </div>
+                `;
+            } else {
+                wishlistItems.innerHTML = wishlist.map(item => `
+                    <div class="wishlist-item">
+                        <img src="${item.img}" alt="${item.name}" class="wishlist-item-img">
+                        <div class="wishlist-item-info">
+                            <div class="wishlist-item-category">${item.category}</div>
+                            <div class="wishlist-item-name">${item.name}</div>
+                            <div class="wishlist-item-price">${item.price}</div>
+                            <button class="add-to-cart-btn" style="margin-top: 1rem;" onclick="addToCart(${item.id})">Add to Cart</button>
+                        </div>
+                        <button class="wishlist-item-remove" onclick="removeFromWishlist(${item.id})">✕</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function removeFromWishlist(id) {
+            wishlist = wishlist.filter(item => item.id !== id);
+            updateWishlist();
+        }
+
+        // Notification System
+        function showNotification(text, icon = '✓') {
+            const toast = document.getElementById('notificationToast');
+            toast.querySelector('.notification-text').textContent = text;
+            toast.querySelector('.notification-icon').textContent = icon;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Search
+        // Search
+document.getElementById('searchBtn').addEventListener('click', () => {
+    document.getElementById('searchModal').classList.add('active');
+    document.getElementById('searchInput').focus();
+});
+
+function closeSearch() {
+    document.getElementById('searchModal').classList.remove('active');
+    document.getElementById('searchInput').value = '';
+}
+
+function handleSearch(e) {
+    const searchTerm = e.target.value.toLowerCase().trim();
+    
+    if (e.key === 'Escape') {
+        closeSearch();
+        return;
+    }
+    
+    if (e.key === 'Enter' && searchTerm) {
+        performSearch(searchTerm);
+        closeSearch();
+        return;
+    }
+    
+    // You can also implement real-time search as they type
+    // For now, just handle Enter key and Escape
+}
+
+function performSearch(searchTerm) {
+    // Search in both collections and products
+    const allItems = [...collections];
+    
+    const results = allItems.filter(item => {
+        return item.name.toLowerCase().includes(searchTerm) ||
+               item.desc.toLowerCase().includes(searchTerm) ||
+               (item.category && item.category.toLowerCase().includes(searchTerm));
+    });
+    
+    if (results.length === 0) {
+        showNotification(`No results found for "${searchTerm}"`, '🔍');
+        return;
+    }
+    
+    // Navigate to shop page and show results
+    navigateTo('shop');
+    
+    // Filter products to show search results
+    setTimeout(() => {
+        // Clear current filter and show all
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector('.filter-btn').classList.add('active'); // Activate "All Blooms"
+        
+        // Show search results
+        const grid = document.getElementById('productGrid');
+        grid.innerHTML = results.map(item => `
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="${item.img}" alt="${item.name}">
+                    <button class="wishlist-btn-product" onclick="toggleWishlist(${item.id}, event)">♡</button>
+                    <button class="quick-add" onclick="addToCart(${item.id})">Add to Cart</button>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">${item.category || item.badge || 'Collection'}</div>
+                    <div class="product-name">${item.name}</div>
+                    <div class="product-price">${item.price}</div>
+                    <div class="product-rating">★★★★★</div>
+                </div>
+            </div>
+        `).join('');
+        
+        // Update section title to show search results
+        const sectionTitle = document.querySelector('.section-title');
+        if (sectionTitle) {
+            sectionTitle.textContent = `Search: "${searchTerm}"`;
+        }
+        
+        showNotification(`Found ${results.length} result(s) for "${searchTerm}"`, '🔍');
+    }, 100);
+}
+
+// Close search modal when clicking outside
+document.getElementById('searchModal').addEventListener('click', (e) => {
+    if (e.target.id === 'searchModal') {
+        closeSearch();
+    }
+});
+
+// Also close with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.getElementById('searchModal').classList.contains('active')) {
+        closeSearch();
+    }
+});
+        // Modal Controls
+        document.getElementById('wishlistBtn').addEventListener('click', () => {
+            document.getElementById('wishlistModal').classList.add('open');
+        });
+
+        document.getElementById('closeWishlist').addEventListener('click', () => {
+            document.getElementById('wishlistModal').classList.remove('open');
+        });
+
+        document.getElementById('cartBtn').addEventListener('click', () => {
+            document.getElementById('cartSidebar').classList.add('open');
+        });
+
+        document.getElementById('closeCart').addEventListener('click', () => {
+            document.getElementById('cartSidebar').classList.remove('open');
+        });
+
+        // Checkout
+        function handleCheckout() {
+            if (cart.length > 0) {
+                showNotification('Proceeding to checkout...', '🛍');
+                setTimeout(() => {
+                    alert(`Thank you for your order!\n\nTotal: ${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}\n\nYour beautiful blooms will be delivered soon!`);
+                    cart = [];
+                    updateCart();
+                    document.getElementById('cartSidebar').classList.remove('open');
+                }, 1000);
+            }
+        }
+
+        // Contact Form
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            showNotification('Message sent successfully!', '✓');
+            setTimeout(() => {
+                e.target.reset();
+            }, 500);
+        }
+
+        // Scroll Header Effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Parallax Effect
+        window.addEventListener('scroll', () => {
+            const parallax = document.querySelector('.hero-image-main');
+            if (parallax) {
+                const scrolled = window.pageYOffset;
+                parallax.style.transform = `translateY(${scrolled * 0.3}px)`;
+            }
+        });
+
+        // Initialize
+        createPetals();
+        renderCollections();
+        renderProducts();
+    </script>
+    <script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
+</script>
+
+
+</body>
+</html>
