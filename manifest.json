@@ -1,7 +1,8 @@
 {
   "name": "Botanica Flora",
   "short_name": "Botanica",
-  "start_url": "index.html",
+  "start_url": "/index.html",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#6b8e23",
@@ -9,6 +10,11 @@
     {
       "src": "flora.png",
       "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "flora.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
