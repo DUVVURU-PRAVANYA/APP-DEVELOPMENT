@@ -990,24 +990,6 @@
             color: var(--rose);
             animation: heartbeat 0.6s ease;
         }
-        @media (max-width: 768px) {
-    .collection-grid,
-    .product-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .hero-image-main {
-        display: none;
-    }
-
-    .hero-text h1 {
-        font-size: 3rem;
-    }
-
-    .nav-links {
-        display: none;
-    }
-}
 
         @keyframes heartbeat {
             0%, 100% { transform: scale(1); }
@@ -2567,11 +2549,15 @@ document.addEventListener('keydown', (e) => {
         renderCollections();
         renderProducts();
     </script>
-    <script>
+    <<script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('Service Worker Registered'));
+  });
 }
 </script>
+
 
 
 </body>
